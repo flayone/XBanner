@@ -40,6 +40,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -1242,6 +1244,15 @@ public class XBanner extends RelativeLayout implements XBannerViewPager.AutoPlay
     }
 
     private class XBannerPageAdapter extends PagerAdapter {
+        HashMap<Integer, View> itemMap = new HashMap<>();
+
+        public XBannerPageAdapter() {
+            int size = getRealCount();
+            for (int i = 0; i < size; i++) {
+                itemMap.put(i, null);
+            }
+        }
+
         @Override
         public int getCount() {
             return mIsAutoPlay ? MAX_VALUE : (mIsHandLoop ? MAX_VALUE : getRealCount());
@@ -1252,6 +1263,7 @@ public class XBanner extends RelativeLayout implements XBannerViewPager.AutoPlay
             return view == object;
         }
 
+
         @NonNull
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
@@ -1259,9 +1271,12 @@ public class XBanner extends RelativeLayout implements XBannerViewPager.AutoPlay
                 return null;
             }
             final int realPosition = getRealPosition(position);
-            View itemView;
+            View itemView = itemMap.get(realPosition);
             if (holderCreator == null) {
-                itemView = LayoutInflater.from(getContext()).inflate(layoutResId, container, false);
+                if (itemView == null) {
+                    itemView = LayoutInflater.from(getContext()).inflate(layoutResId, container, false);
+                    itemMap.put(realPosition, itemView);
+                }
                 if (mOnItemClickListener != null && !mData.isEmpty()) {
                     itemView.setOnClickListener(new OnDoubleClickListener() {
                         @Override

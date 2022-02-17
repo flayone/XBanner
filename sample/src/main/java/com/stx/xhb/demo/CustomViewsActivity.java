@@ -2,6 +2,7 @@ package com.stx.xhb.demo;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,8 +38,9 @@ public class CustomViewsActivity extends AppCompatActivity {
         banner.loadImage(new XBanner.XBannerAdapter() {
             @Override
             public void loadBanner(XBanner banner, Object model, View view, int position) {
+                Log.d("loadBanner", "item view = " + view.toString());
                 TextView tvContent = (TextView) view.findViewById(R.id.tv);
-                tvContent.setText(String.valueOf(position + 1));
+                tvContent.setText(String.valueOf(position + 1) + "_"+((CustomViewsInfo) model).getXBannerUrl());
                 view.setBackgroundColor(Color.parseColor(((CustomViewsInfo) model).getXBannerUrl()));
             }
         });
